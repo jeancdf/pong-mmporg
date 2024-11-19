@@ -1,5 +1,4 @@
 using UnityEngine;
-using Mirror;
 
 public enum PongBallState
 {
@@ -8,11 +7,10 @@ public enum PongBallState
     PlayerRightWin
 }
 
-public class PongBall : NetworkBehaviour
+public class PongBall : MonoBehaviour
 {
     public float Speed = 5f;
     
-    [SyncVar]
     public PongBallState State = PongBallState.Playing;
     
     private Vector3 direction;
@@ -20,8 +18,6 @@ public class PongBall : NetworkBehaviour
 
     void Start()
     {
-        if (!isServer) return;
-        
         rb = GetComponent<Rigidbody>();
         direction = Random.value < 0.5f ? Vector3.right : Vector3.left;
         rb.linearVelocity = direction * Speed;
@@ -29,8 +25,6 @@ public class PongBall : NetworkBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if (!isServer) return;
-
         if (collision.gameObject.name == "BoundLeft")
         {
             State = PongBallState.PlayerRightWin;
