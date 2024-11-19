@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+public .UDPSender Sender;
+
 public enum PongPlayer {
   PlayerLeft = 1,
   PlayerRight = 2
@@ -37,7 +39,7 @@ public class PongPaddle : MonoBehaviour
     void Update()
     {
       float direction = PlayerAction.ReadValue<float>();
-
+      Debug.Log("Mouvement : " + direction + " - " + Player);
       Vector3 newPos = transform.position + (Vector3.up * Speed * direction * Time.deltaTime);
       newPos.y = Mathf.Clamp(newPos.y, MinY, MaxY);
 

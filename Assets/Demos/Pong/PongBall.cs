@@ -1,5 +1,6 @@
 using UnityEngine;
 
+public UDPSender Sender;
 public enum PongBallState {
   Playing = 0,
   PlayerLeftWin = 1,
@@ -47,14 +48,26 @@ public class PongBall : MonoBehaviour
         case "PaddleLeft":
         case "PaddleRight":
           Direction.x = -Direction.x;
+          message = "Collision paddle"
+          Sender.DestinationIP = IP;
+          Sender.DestinationPort = port;
+          Sender.SendUDPMessage(message);
           break;
 
         case "BoundLeft":
           _State = PongBallState.PlayerRightWin;
+          message = "Player Right win"
+          Sender.DestinationIP = IP;
+          Sender.DestinationPort = port;
+          Sender.SendUDPMessage(message);
           break;
 
         case "BoundRight":
           _State = PongBallState.PlayerLeftWin;
+          message = "Player Left win"
+          Sender.DestinationIP = IP;
+          Sender.DestinationPort = port;
+          Sender.SendUDPMessage(message);
           break;
 
       }
