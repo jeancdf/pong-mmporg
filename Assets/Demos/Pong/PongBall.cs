@@ -1,76 +1,49 @@
 using UnityEngine;
+using Mirror;
 
-public UDPSender Sender;
-public enum PongBallState {
-  Playing = 0,
-  PlayerLeftWin = 1,
-  PlayerRightWin = 2,
+public enum PongBallState
+{
+    Playing,
+    PlayerLeftWin,
+    PlayerRightWin
 }
 
-public class PongBall : MonoBehaviour
+public class PongBall : NetworkBehaviour
 {
-    public float Speed = 1;
+    public float Speed = 5f;
+    
+    [SyncVar]
+    public PongBallState State = PongBallState.Playing;
+    
+    private Vector3 direction;
+    private Rigidbody rb;
 
-    Vector3 Direction;
-    PongBallState _State = PongBallState.Playing;
-
-    public PongBallState State {
-      get {
-        return _State;
-      }
-    } 
-
-    void Start() {
-      Direction = new Vector3(
-        Random.Range(0.5f, 1),
-        Random.Range(-0.5f, 0.5f),
-        0
-      );
-      Direction.x *= Mathf.Sign(Random.Range(-100, 100));
-      Direction.Normalize();
+    void Start()
+    {
+        if (!isServer) return;
+        
+        rb = GetComponent<Rigidbody>();
+        direction = Random.value < 0.5f ? Vector3.right : Vector3.left;
+        rb.linearVelocity = direction * Speed;
     }
 
-    void Update() {
-      if (State != PongBallState.Playing) {
-        return;
-      }
+    void OnCollisionEnter(Collision collision)
+    {
+        if (!isServer) return;
 
-      transform.position = transform.position + (Direction * Speed * Time.deltaTime);
+        if (collision.gameObject.name == "BoundLeft")
+        {
+            State = PongBallState.PlayerRightWin;
+        }
+        else if (collision.gameObject.name == "BoundRight")
+        {
+            State = PongBallState.PlayerLeftWin;
+        }
+        else
+        {
+            Vector3 normal = collision.contacts[0].normal;
+            direction = Vector3.Reflect(direction, normal);
+            rb.linearVelocity = direction * Speed;
+        }
     }
-
-    void OnCollisionEnter(Collision c) {
-      switch (c.collider.name) {
-        case "BoundTop":
-        case "BoundBottom":
-          Direction.y = -Direction.y;
-          break;
-
-        case "PaddleLeft":
-        case "PaddleRight":
-          Direction.x = -Direction.x;
-          message = "Collision paddle"
-          Sender.DestinationIP = IP;
-          Sender.DestinationPort = port;
-          Sender.SendUDPMessage(message);
-          break;
-
-        case "BoundLeft":
-          _State = PongBallState.PlayerRightWin;
-          message = "Player Right win"
-          Sender.DestinationIP = IP;
-          Sender.DestinationPort = port;
-          Sender.SendUDPMessage(message);
-          break;
-
-        case "BoundRight":
-          _State = PongBallState.PlayerLeftWin;
-          message = "Player Left win"
-          Sender.DestinationIP = IP;
-          Sender.DestinationPort = port;
-          Sender.SendUDPMessage(message);
-          break;
-
-      }
-    }
-
 }

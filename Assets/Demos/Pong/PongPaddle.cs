@@ -1,14 +1,12 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public .UDPSender Sender;
-
 public enum PongPlayer {
   PlayerLeft = 1,
   PlayerRight = 2
 }
 
-public class PongPaddle : MonoBehaviour
+public class PongPaddle : NetworkBehaviour
 { 
     public PongPlayer Player = PongPlayer.PlayerLeft;
     public float Speed = 1;
@@ -18,35 +16,36 @@ public class PongPaddle : MonoBehaviour
     PongInput inputActions;
     InputAction PlayerAction;
 
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        if (!isLocalPlayer) return;
+
         inputActions = new PongInput();
         switch (Player) {
-          case PongPlayer.PlayerLeft:
-            PlayerAction = inputActions.Pong.Player1;
-            break;
-          case PongPlayer.PlayerRight:
-            PlayerAction = inputActions.Pong.Player2;
-            break;
+            case PongPlayer.PlayerLeft:
+                PlayerAction = inputActions.Pong.Player1;
+                break;
+            case PongPlayer.PlayerRight:
+                PlayerAction = inputActions.Pong.Player2;
+                break;
         }
 
         PlayerAction.Enable();
     }
 
-    // Update is called once per frame
     void Update()
     {
       float direction = PlayerAction.ReadValue<float>();
-      Debug.Log("Mouvement : " + direction + " - " + Player);
+
       Vector3 newPos = transform.position + (Vector3.up * Speed * direction * Time.deltaTime);
       newPos.y = Mathf.Clamp(newPos.y, MinY, MaxY);
 
       transform.position = newPos;
     }
 
-    void OnDisable() {
-      PlayerAction.Disable();
+    void OnDisable() 
+    {
+        if (PlayerAction != null)
+            PlayerAction.Disable();
     }
 }
