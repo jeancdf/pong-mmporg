@@ -3,43 +3,74 @@ using Mirror;
 
 public class CustomNetworkManager : NetworkManager
 {
-    public int player1Score = 0;
-    public int player2Score = 0;
+    public bool debugMode = true;
 
-    public override void OnServerAddPlayer(NetworkConnection conn)
+    public override void Awake()
+    {
+        base.Awake();
+        Debug.Log("CustomNetworkManager: Awake");
+    }
+
+    public override void Start()
+    {
+        base.Start();
+        Debug.Log("CustomNetworkManager: Start");
+    }
+
+    public override void OnStartServer()
+    {
+        base.OnStartServer();
+        Debug.Log("CustomNetworkManager: Server Started");
+    }
+
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+        Debug.Log("CustomNetworkManager: Client Started");
+    }
+
+    public override void OnServerAddPlayer(NetworkConnectionToClient conn)
     {
         base.OnServerAddPlayer(conn);
-        Debug.Log("Player added. Total players: " + numPlayers);
-    }
-
-    public override void OnServerDisconnect(NetworkConnection conn)
-    {
-        base.OnServerDisconnect(conn);
-        Debug.Log("Player disconnected. Total players: " + numPlayers);
-    }
-
-    public void UpdateScore(int playerNumber, int score)
-    {
-        if (playerNumber == 1)
+        
+        Debug.Log($"CustomNetworkManager: Player Added. Total players: {numPlayers}");
+        
+        // Assign player positions based on connection order
+        GameObject player = conn.identity.gameObject;
+        PongPaddle paddle = player.GetComponent<PongPaddle>();
+        
+        if (numPlayers == 1)
         {
-            player1Score += score;
+            paddle.Player = PongPlayer.PlayerLeft;
+            player.transform.position = new Vector3(-5, 0, 0);
+
+            if (debugMode)
+            {
+                Debug.Log("Debug mode: Spawning right paddle and ball");
+                // Spawn right paddle for debugging
+                GameObject rightPaddle = Instantiate(playerPrefab, new Vector3(5, 0, 0), Quaternion.identity);
+                rightPaddle.GetComponent<PongPaddle>().Player = PongPlayer.PlayerRight;
+                NetworkServer.Spawn(rightPaddle);
+
+                // Spawn ball
+                SpawnBall();
+            }
         }
-        else if (playerNumber == 2)
+        else if (numPlayers == 2)
         {
-            player2Score += score;
+            paddle.Player = PongPlayer.PlayerRight;
+            player.transform.position = new Vector3(5, 0, 0);
+            SpawnBall();
         }
-        Debug.Log("Player 1 Score: " + player1Score + " | Player 2 Score: " + player2Score);
     }
 
-    public void StartGame()
+    void SpawnBall()
     {
-        // Logic to start the game
-        Debug.Log("Game started!");
-    }
-
-    public void EndGame()
-    {
-        // Logic to end the game
-        Debug.Log("Game ended!");
+        if (NetworkServer.active)
+        {
+            Debug.Log("Spawning ball...");
+            GameObject ball = Instantiate(spawnPrefabs.Find(prefab => prefab.GetComponent<PongBall>() != null));
+            NetworkServer.Spawn(ball);
+        }
     }
 } 
