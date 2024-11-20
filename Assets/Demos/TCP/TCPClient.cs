@@ -1,6 +1,9 @@
 using UnityEngine;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
+using System.Text;
+using System;
 
 public class TCPClient : MonoBehaviour
 {

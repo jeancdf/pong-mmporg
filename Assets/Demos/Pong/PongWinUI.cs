@@ -28,7 +28,8 @@ public class PongWinUI : MonoBehaviour
         // Try to find ball periodically if we don't have it
         if (Ball == null && Time.time >= nextSearchTime)
         {
-            Ball = FindObjectOfType<PongBall>();
+            Ball = Object.FindFirstObjectByType<PongBall>();
+
             nextSearchTime = Time.time + searchInterval;
             return;
         }

@@ -19,8 +19,11 @@ public class NetworkManager : MonoBehaviour
     public PongPaddle rightPaddle;
     public PongBall ball;
 
+    public int Port => PORT;
+
     void Start()
     {
+        Debug.Log("NetworkManager Start");
         // Initialize components
         if (leftPaddle == null || rightPaddle == null || ball == null)
         {
@@ -31,6 +34,7 @@ public class NetworkManager : MonoBehaviour
 
     public void StartHost()
     {
+        Debug.Log("StartHost");
         try
         {
             server = new TcpListener(IPAddress.Any, PORT);
@@ -178,17 +182,37 @@ public class NetworkManager : MonoBehaviour
         });
     }
 
-    void OnDestroy()
+    public void StopNetwork()
     {
+        Debug.Log("Stopping network...");
         isConnected = false;
         if (networkThread != null)
+        {
             networkThread.Abort();
+            networkThread = null;
+        }
         if (stream != null)
+        {
             stream.Close();
+            stream = null;
+        }
         if (client != null)
+        {
             client.Close();
+            client = null;
+        }
         if (server != null)
+        {
             server.Stop();
+            server = null;
+        }
+        isHost = false;
+        Debug.Log("Network stopped.");
+    }
+
+    void OnDestroy()
+    {
+        StopNetwork();
     }
 
     void Update()

@@ -21,44 +21,31 @@ public class PongPaddle : MonoBehaviour
 
     void Start()
     {
-        // Trouve le NetworkManager (si nécessaire pour d'autres fonctionnalités)
-    networkManager = FindObjectOfType<NetworkManager>();
-    inputActions = new PongInput();
+        // Find the NetworkManager (if needed for other functionalities)
+        networkManager = FindObjectOfType<NetworkManager>();
+        inputActions = new PongInput();
 
-    switch (Player)
-    {
-        case PongPlayer.PlayerLeft:
-            PlayerAction = inputActions.Pong.Player1;
-            break;
-        case PongPlayer.PlayerRight:
-            PlayerAction = inputActions.Pong.Player2;
-            break;
-    }
-
-    PlayerAction.Enable();
-
-    // Initialisation de la connexion TCP
-    if (tcpClient != null)
-    {
-        // Connexion au serveur TCP
-        tcpClient.Connect(OnServerMessageReceived);
-
-        // Vérifiez si la connexion a réussi
-        if (tcpClient.IsConnected)
+        switch (Player)
         {
-            Debug.Log("Connexion au serveur réussie !");
-            // Envoyer un message au serveur
-            tcpClient.SendTCPMessage(Player + " connected.");
+            case PongPlayer.PlayerLeft:
+                PlayerAction = inputActions.Pong.Player1;
+                break;
+            case PongPlayer.PlayerRight:
+                PlayerAction = inputActions.Pong.Player2;
+                break;
+        }
+
+        PlayerAction.Enable();
+
+        // Bypass TCP connection logic for now
+        if (tcpClient != null)
+        {
+            Debug.Log("TCPClient is assigned, but skipping connection setup.");
         }
         else
         {
-            Debug.LogWarning("Échec de la connexion au serveur.");
+            Debug.LogWarning("TCPClient is not assigned in the inspector!");
         }
-    }
-    else
-    {
-        Debug.LogError("TCPClient n'est pas assigné dans l'inspecteur !");
-    }
     }
 
     void Update()
@@ -84,20 +71,20 @@ public class PongPaddle : MonoBehaviour
         if (PlayerAction != null)
             PlayerAction.Disable();
         if (tcpClient != null && tcpClient.IsConnected)
-    {
-        tcpClient.SendTCPMessage("Player " + Player + " disconnected.");
-        tcpClient.Close();
-    }
+        {
+            tcpClient.SendTCPMessage("Player " + Player + " disconnected.");
+            tcpClient.Close();
+        }
     }
 
     private void OnServerMessageReceived(string message)
-{
-    Debug.Log("Message reçu du serveur : " + message);
-
-    // Exemple : démarrez une action en fonction du message reçu
-    if (message == "StartGame")
     {
-        Debug.Log("La partie commence !");
+        Debug.Log("Message received from server: " + message);
+
+        // Example: start an action based on the received message
+        if (message == "StartGame")
+        {
+            Debug.Log("The game is starting!");
+        }
     }
-}
 }
