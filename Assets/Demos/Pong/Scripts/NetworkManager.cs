@@ -155,12 +155,21 @@ public class NetworkManager : MonoBehaviour
         stream.Write(buffer, 0, buffer.Length);
     }
 
-    private void SendBallPosition(Vector2 position)
+    public void SendBallPosition(Vector3 position)
     {
-        if (!isConnected || !isHost) return;
+        if (!isConnected || stream == null) return;
+
         string data = $"ball:{position.x},{position.y}";
         byte[] buffer = Encoding.ASCII.GetBytes(data);
-        stream.Write(buffer, 0, buffer.Length);
+
+        try
+        {
+            stream.Write(buffer, 0, buffer.Length);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("Erreur lors de l'envoi de la position de la balle : " + e.Message);
+        }
     }
 
     private void UpdatePaddlePosition(PongPaddle paddle, float yPosition)

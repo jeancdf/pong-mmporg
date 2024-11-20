@@ -1491,7 +1491,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bacdeada40f4241b4a9e9fe25b22b34e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tcpClient: {fileID: 0}
+  networkManager: {fileID: 1652468497}
   Player: 2
   Speed: 5
   MinY: -4
@@ -1645,7 +1645,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bacdeada40f4241b4a9e9fe25b22b34e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tcpClient: {fileID: 0}
+  networkManager: {fileID: 0}
   Player: 1
   Speed: 5
   MinY: -4
@@ -2929,7 +2929,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1652468494}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7db810db391148d43a60acbb498535e1, type: 3}
+  m_Script: {fileID: 11500000, guid: 070910ac052a78a4b99f4afc1d34bd4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   leftPaddle: {fileID: 814606657}
