@@ -9,7 +9,7 @@ public enum PongPlayer {
 public class PongPaddle : MonoBehaviour
 { 
     [SerializeField]
-    public TCPClient tcpClient;
+    private NetworkManager networkManager;
     public PongPlayer Player = PongPlayer.PlayerLeft;
     public float Speed = 1;
     public float MinY = -4;
@@ -17,7 +17,6 @@ public class PongPaddle : MonoBehaviour
 
     PongInput inputActions;
     InputAction PlayerAction;
-    NetworkManager networkManager;
 
     void Start()
     {
@@ -37,34 +36,23 @@ public class PongPaddle : MonoBehaviour
 
     PlayerAction.Enable();
 
-    // Initialisation de la connexion TCP
-    if (tcpClient != null)
+    // Connexion ou démarrage d'une partie via NetworkManager
+    if (networkManager != null)
     {
-        // Connexion au serveur TCP
-        tcpClient.Connect(OnServerMessageReceived);
-
-        // Vérifiez si la connexion a réussi
-        if (tcpClient.IsConnected)
-        {
-            Debug.Log("Connexion au serveur réussie !");
-            // Envoyer un message au serveur
-            tcpClient.SendTCPMessage(Player + " connected.");
-        }
-        else
-        {
-            Debug.LogWarning("Échec de la connexion au serveur.");
-        }
+        networkManager.ConnectToHost("100.72.128.85"); // Remplacez par l'IP du serveur si nécessaire
+        //networkManager.SendMessageToServer("Player Right connected.");
+    
     }
     else
     {
-        Debug.LogError("TCPClient n'est pas assigné dans l'inspecteur !");
+        Debug.LogError("NetworkManager n'est pas assigné dans PongPaddle !");
     }
     }
 
     void Update()
     {
         float direction = PlayerAction.ReadValue<float>();
-        Move(direction);
+        Move(direction);    
     }
 
     void Move(float direction)
@@ -73,25 +61,22 @@ public class PongPaddle : MonoBehaviour
         newPos.y = Mathf.Clamp(newPos.y, MinY, MaxY);
         transform.position = newPos;
 
-        if (networkManager != null)
-        {
-            networkManager.SendPaddlePosition(transform.position.y);
-        }
-    }
+        // Envoi de la position actuelle du paddle
+        //if (networkManager != null)
+        //{
+        //    networkManager.SendPaddlePosition(transform.position.y);
+        //}
 
-    void OnDisable() 
+        }
+
+    void OnDisable()
     {
-        if (PlayerAction != null)
-            PlayerAction.Disable();
-        if (tcpClient != null && tcpClient.IsConnected)
-    {
-        tcpClient.SendTCPMessage("Player " + Player + " disconnected.");
-        tcpClient.Close();
-    }
-    }
+    if (PlayerAction != null)
+        PlayerAction.Disable();
+}
 
     private void OnServerMessageReceived(string message)
-{
+    {
     Debug.Log("Message reçu du serveur : " + message);
 
     // Exemple : démarrez une action en fonction du message reçu

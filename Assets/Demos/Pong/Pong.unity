@@ -1307,7 +1307,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bacdeada40f4241b4a9e9fe25b22b34e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tcpClient: {fileID: 1652468495}
+  networkManager: {fileID: 1652468497}
   Player: 2
   Speed: 5
   MinY: -4
@@ -1461,7 +1461,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bacdeada40f4241b4a9e9fe25b22b34e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tcpClient: {fileID: 0}
+  networkManager: {fileID: 0}
   Player: 1
   Speed: 5
   MinY: -4
@@ -1737,7 +1737,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1652468496}
-  - component: {fileID: 1652468495}
+  - component: {fileID: 1652468497}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -1745,20 +1745,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1652468495
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1652468494}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afee21c4e028342c18f8311bbfba857a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  DestinationPort: 25000
-  DestinationIP: 100.72.128.85
 --- !u!4 &1652468496
 Transform:
   m_ObjectHideFlags: 0
@@ -1774,6 +1760,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1652468497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1652468494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 070910ac052a78a4b99f4afc1d34bd4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftPaddle: {fileID: 814606657}
+  rightPaddle: {fileID: 807978588}
+  ball: {fileID: 2030656716}
 --- !u!1 &1903440898
 GameObject:
   m_ObjectHideFlags: 0
