@@ -1307,6 +1307,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bacdeada40f4241b4a9e9fe25b22b34e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tcpClient: {fileID: 1652468495}
   Player: 2
   Speed: 5
   MinY: -4
@@ -1460,6 +1461,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bacdeada40f4241b4a9e9fe25b22b34e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tcpClient: {fileID: 0}
   Player: 1
   Speed: 5
   MinY: -4
@@ -1726,6 +1728,52 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1396659331}
   m_CullTransparentMesh: 1
+--- !u!1 &1652468494
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1652468496}
+  - component: {fileID: 1652468495}
+  m_Layer: 0
+  m_Name: NetworkManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1652468495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1652468494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afee21c4e028342c18f8311bbfba857a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DestinationPort: 25000
+  DestinationIP: 100.72.128.85
+--- !u!4 &1652468496
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1652468494}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1903440898
 GameObject:
   m_ObjectHideFlags: 0
@@ -1880,6 +1928,7 @@ MonoBehaviour:
   Panel: {fileID: 1396659331}
   PlayerLeft: {fileID: 2130213939}
   PlayerRight: {fileID: 788302282}
+  networkManager: {fileID: 0}
 --- !u!1 &2030656710
 GameObject:
   m_ObjectHideFlags: 0
@@ -2030,6 +2079,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed: 5
+  State: 0
 --- !u!1 &2130213939
 GameObject:
   m_ObjectHideFlags: 0
@@ -2182,3 +2232,4 @@ SceneRoots:
   - {fileID: 867576503}
   - {fileID: 1903440902}
   - {fileID: 551751738}
+  - {fileID: 1652468496}

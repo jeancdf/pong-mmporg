@@ -8,6 +8,8 @@ public enum PongPlayer {
 
 public class PongPaddle : MonoBehaviour
 { 
+    [SerializeField]
+    public TCPClient tcpClient;
     public PongPlayer Player = PongPlayer.PlayerLeft;
     public float Speed = 1;
     public float MinY = -4;
@@ -19,19 +21,44 @@ public class PongPaddle : MonoBehaviour
 
     void Start()
     {
-        networkManager = FindObjectOfType<NetworkManager>();
-        inputActions = new PongInput();
-        
-        switch (Player) {
-            case PongPlayer.PlayerLeft:
-                PlayerAction = inputActions.Pong.Player1;
-                break;
-            case PongPlayer.PlayerRight:
-                PlayerAction = inputActions.Pong.Player2;
-                break;
-        }
+        // Trouve le NetworkManager (si nécessaire pour d'autres fonctionnalités)
+    networkManager = FindObjectOfType<NetworkManager>();
+    inputActions = new PongInput();
 
-        PlayerAction.Enable();
+    switch (Player)
+    {
+        case PongPlayer.PlayerLeft:
+            PlayerAction = inputActions.Pong.Player1;
+            break;
+        case PongPlayer.PlayerRight:
+            PlayerAction = inputActions.Pong.Player2;
+            break;
+    }
+
+    PlayerAction.Enable();
+
+    // Initialisation de la connexion TCP
+    if (tcpClient != null)
+    {
+        // Connexion au serveur TCP
+        tcpClient.Connect(OnServerMessageReceived);
+
+        // Vérifiez si la connexion a réussi
+        if (tcpClient.IsConnected)
+        {
+            Debug.Log("Connexion au serveur réussie !");
+            // Envoyer un message au serveur
+            tcpClient.SendTCPMessage(Player + " connected.");
+        }
+        else
+        {
+            Debug.LogWarning("Échec de la connexion au serveur.");
+        }
+    }
+    else
+    {
+        Debug.LogError("TCPClient n'est pas assigné dans l'inspecteur !");
+    }
     }
 
     void Update()
@@ -56,5 +83,21 @@ public class PongPaddle : MonoBehaviour
     {
         if (PlayerAction != null)
             PlayerAction.Disable();
+        if (tcpClient != null && tcpClient.IsConnected)
+    {
+        tcpClient.SendTCPMessage("Player " + Player + " disconnected.");
+        tcpClient.Close();
     }
+    }
+
+    private void OnServerMessageReceived(string message)
+{
+    Debug.Log("Message reçu du serveur : " + message);
+
+    // Exemple : démarrez une action en fonction du message reçu
+    if (message == "StartGame")
+    {
+        Debug.Log("La partie commence !");
+    }
+}
 }
