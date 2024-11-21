@@ -9,26 +9,32 @@ public enum PongBallState
 
 public class PongBall : MonoBehaviour
 {
-    public float Speed = 5f;
-    
-    public PongBallState State = PongBallState.Playing;
-    
-    private Vector3 direction;
+    public float Speed = 1;
 
-    [SerializeField]
-    private NetworkManager networkManager; // Référence au NetworkManager
+    Vector3 Direction;
+    PongBallState _State = PongBallState.Playing;
 
+    public PongBallState State {
+      get {
+        return _State;
+      }
+    } 
 
-    void Start()
-    {
-        Debug.Log("PongBall Start");
-        InitializeDirection();
+    void Awake() {
+      if (!Globals.IsServer) {
+        enabled = false;
+      }
+
     }
 
-    void Update()
-    {
-        transform.position += direction * Speed * Time.deltaTime;
-        SendBallPositionToServer();
+    void Start() {
+      Direction = new Vector3(
+        Random.Range(0.5f, 1),
+        Random.Range(-0.5f, 0.5f),
+        0
+      );
+      Direction.x *= Mathf.Sign(Random.Range(-100, 100));
+      Direction.Normalize();
     }
 
     void Update()
@@ -38,33 +44,30 @@ public class PongBall : MonoBehaviour
     }
 
 
-    void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.name == "BoundLeft")
-        {
-            State = PongBallState.PlayerRightWin;
-            Debug.Log("PongBall: PlayerRightWin");
-        }
-        else if (collision.gameObject.name == "BoundRight")
-        {
-            State = PongBallState.PlayerLeftWin;
-            Debug.Log("PongBall: PlayerLeftWin");
-        }
-        else
-        {
-            Vector3 normal = collision.contacts[0].normal;
-            direction = Vector3.Reflect(direction, normal);
-            rb.linearVelocity = direction * Speed;
-        }
-    }
+    void OnCollisionEnter(Collision c) {
+      switch (c.collider.name) {
+        case "BoundTop":
+        case "BoundBottom":
+          Direction.y = -Direction.y;
+          break;
 
+        case "PaddleLeft":
+        case "PaddleRight":
+        case "BoundLeft":
+        case "BoundRight":
+          Direction.x = -Direction.x;
+          break;
 
-    private void SendBallPositionToServer()
-    {
-        if (networkManager != null)
-        {
-            Vector3 position = transform.position;
-            networkManager.SendBallPosition(position);
-        }
+        /*
+        case "BoundLeft":
+          _State = PongBallState.PlayerRightWin;
+          break;
+
+        case "BoundRight":
+          _State = PongBallState.PlayerLeftWin;
+          break;
+        */
+
+      }
     }
 }
