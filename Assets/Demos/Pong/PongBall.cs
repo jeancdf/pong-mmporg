@@ -37,13 +37,6 @@ public class PongBall : MonoBehaviour
       Direction.Normalize();
     }
 
-    void Update()
-    {
-        // Transmet la position de la balle au serveur
-        SendBallPositionToServer();
-    }
-
-
     void OnCollisionEnter(Collision c) {
       switch (c.collider.name) {
         case "BoundTop":
