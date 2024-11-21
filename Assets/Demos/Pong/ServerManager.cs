@@ -43,9 +43,9 @@ public class ServerManager : MonoBehaviour
             };
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    public void BroadcastUDPMessage(string message) {
+        foreach (KeyValuePair<string, IPEndPoint> client in Clients) {
+            UDP.SendUDPMessage(message, client.Value);
+        }
     }
 }
