@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class ServerManager : MonoBehaviour
 {
-    public UDPReceiver Receiver;
+    public UDPService UDP;
+    public int ListenPort = 25000;
 
     public Dictionary<string, IPEndPoint> Clients = new Dictionary<string, IPEndPoint>(); 
 
@@ -17,7 +18,9 @@ public class ServerManager : MonoBehaviour
 
     void Start()
     {
-        Receiver.Listen(
+        UDP.Listen(ListenPort);
+
+        UDP.OnMessageReceived +=  
             (string message, IPEndPoint sender) => {
                 Debug.Log("[SERVER] Message received from " + 
                     sender.Address.ToString() + ":" + sender.Port 
@@ -32,13 +35,12 @@ public class ServerManager : MonoBehaviour
                         }
                         Debug.Log("There are " + Clients.Count + " clients present.");
 
-                        Receiver.SendUDPMessage("welcome!", sender);
+                        UDP.SendUDPMessage("welcome!", sender);
                         break;
                 }
                 
                 //@todo : do something with the message that has arrived! 
-            }
-        );
+            };
     }
 
     // Update is called once per frame
