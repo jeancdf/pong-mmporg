@@ -3,9 +3,12 @@ using UnityEngine;
 
 public class ClientManager : MonoBehaviour
 {
-    public UDPSender Sender;
+    public UDPService UDP;
+    public string ServerIP = "127.0.0.1";
+    public int ServerPort = 25000;
 
     private float NextCoucouTimeout = -1;
+    private IPEndPoint ServerEndpoint;
 
     void Awake() {
         // Desactiver mon objet si je ne suis pas le client
@@ -17,7 +20,11 @@ public class ClientManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        Sender.OnMessageReceived = (string message, IPEndPoint sender) => {
+        UDP.InitClient();
+
+        ServerEndpoint = new IPEndPoint(IPAddress.Parse(ServerIP), ServerPort);
+            
+        UDP.OnMessageReceived += (string message, IPEndPoint sender) => {
             Debug.Log("[CLIENT] Message received from " + 
                 sender.Address.ToString() + ":" + sender.Port 
                 + " =>" + message);
@@ -28,7 +35,7 @@ public class ClientManager : MonoBehaviour
     void Update()
     {
         if (Time.time > NextCoucouTimeout) {
-            Sender.SendUDPMessage("coucou");
+            UDP.SendUDPMessage("coucou", ServerEndpoint);
             NextCoucouTimeout = Time.time + 0.5f;
         }
     }
