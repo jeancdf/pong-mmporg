@@ -1,11 +1,5 @@
 using UnityEngine;
 
-[System.Serializable]
-public class BallState {
-    public Vector3 Position;
-}
-
-
 public class BallSyncServer : MonoBehaviour
 {
     ServerManager ServerMan;
@@ -15,26 +9,27 @@ public class BallSyncServer : MonoBehaviour
       if (!Globals.IsServer) {
         enabled = false;
       }
-
     }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         ServerMan = FindFirstObjectByType<ServerManager>();
     }
 
-    // Update is called once per frame
     void Update()
-    {  
-        if (Time.time > NextUpdateTimeout) {
-            BallState state = new BallState{
-                Position = transform.position
-            };
+    {
+        if (Time.time > NextUpdateTimeout)
+        {
+            Vector3 position = transform.position;
 
-            string json = JsonUtility.ToJson(state);
+            // Construire le message avec des points comme séparateurs décimaux
+            string data = string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                "X:{0},Y:{1},Z:{2}",
+                position.x, position.y, position.z);
+            string message = $"UPDATE|BALL|{data}";
 
-            ServerMan.BroadcastUDPMessage("UPDATE|" + json);
+            ServerMan.BroadcastUDPMessage(message);
+
             NextUpdateTimeout = Time.time + 0.03f;
         }
     }

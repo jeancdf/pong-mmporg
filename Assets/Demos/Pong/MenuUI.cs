@@ -8,7 +8,6 @@ public class MenuUI : MonoBehaviour
     public void setIpAddress() {
         Globals.IPAddress = InpIP.text;
     }
-
     public void SetRole(bool isServer) {
         Globals.IsServer = isServer;
     }
@@ -20,7 +19,5 @@ public class MenuUI : MonoBehaviour
         if(Globals.IPAddress != "" && Globals.IsServer == false) {
             SceneManager.LoadScene("Pong");
         }
-        
-
     }
 }
