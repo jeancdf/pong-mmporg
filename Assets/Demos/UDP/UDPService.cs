@@ -21,7 +21,7 @@ public class UDPService : MonoBehaviour
         {
             // Local End-Point
             localEP = new IPEndPoint(IPAddress.Any, port);
-            
+
             // Create the listener
             udp = new UdpClient();
             udp.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
@@ -75,24 +75,24 @@ public class UDPService : MonoBehaviour
         if (udp == null) { return; }
 
         while (udp.Available > 0)
-		{
+        {
             IPEndPoint sourceEP = new IPEndPoint(IPAddress.Any, 0);
-			byte[] data = udp.Receive(ref sourceEP);
+            byte[] data = udp.Receive(ref sourceEP);
 
-			try
-			{
-				ParseString(data, sourceEP);
-			}
-			catch (System.Exception ex)
-			{
-				Debug.LogWarning("Error receiving UDP message: " + ex.Message);
-			}
-		}
+            try
+            {
+                ParseString(data, sourceEP);
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogWarning("Error receiving UDP message: " + ex.Message);
+            }
+        }
     }
 
     private void ParseString(byte[] bytes, IPEndPoint sender) {
         string message = System.Text.Encoding.UTF8.GetString(bytes);
-        OnMessageReceived.Invoke(message, sender);
+        OnMessageReceived?.Invoke(message, sender);
     }
 
     public void SendUDPMessage(string message, IPEndPoint destination) {
@@ -103,17 +103,14 @@ public class UDPService : MonoBehaviour
     private void SendUDPBytes(byte[] bytes, IPEndPoint destination) {
         if (udp == null) { 
             Debug.LogWarning("Trying to send a message on socket that is not yet open");
-            return; 
+            return;
         }
 
         try {
             udp.Send(bytes, bytes.Length, destination);
-            
-        } catch (SocketException e)
-        {
+
+        } catch (SocketException e) {
             Debug.LogWarning(e.Message);
         }
     }
-
-
 }

@@ -1,5 +1,6 @@
 using System.Net;
 using UnityEngine;
+using System.Globalization;
 
 public class BallSyncClient : MonoBehaviour
 {
@@ -11,23 +12,46 @@ public class BallSyncClient : MonoBehaviour
       }
     }
 
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         UDP = FindFirstObjectByType<UDPService>();
 
-        UDP.OnMessageReceived += (string message, IPEndPoint sender) => {
+        UDP.OnMessageReceived += (string message, IPEndPoint sender) =>
+        {
+            if (!message.StartsWith("UPDATE|BALL|")) { return; }
 
-            if (!message.StartsWith("UPDATE")) { return; }
+            try
+            {
+                string[] tokens = message.Split('|');
+                if (tokens.Length < 3)
+                {
+                    Debug.LogWarning("Message mal formé : parties insuffisantes.");
+                    return;
+                }
 
-            string[] tokens = message.Split('|');
-            string json = tokens[1];
+                string data = tokens[2];
+                
 
-            BallState state = JsonUtility.FromJson<BallState>(json);
-            
-            transform.position = state.Position;
+                string[] positionData = data.Split(',');
+                if (positionData.Length != 3)
+                {
+                    Debug.LogWarning($"Données de position mal formées : coordonnées insuffisantes : {data}");
+                    Debug.LogWarning($"Raw position data: {data}"); 
+                    return;
+                }
 
+                
+                float x = float.Parse(positionData[0].Split(':')[1], CultureInfo.InvariantCulture);
+                float y = float.Parse(positionData[1].Split(':')[1], CultureInfo.InvariantCulture);
+                float z = float.Parse(positionData[2].Split(':')[1], CultureInfo.InvariantCulture);
+
+                transform.position = new Vector3(x, y, z);
+                
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogWarning($"Erreur lors du parsing des données de position : {ex.Message}");
+            }
         };
     }
 
