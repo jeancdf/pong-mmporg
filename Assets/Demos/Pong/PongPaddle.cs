@@ -2,87 +2,69 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 public enum PongPlayer {
-  PlayerLeft = 1,
-  PlayerRight = 2
+    PlayerLeft = 1,
+    PlayerRight = 2
 }
 
 public class PongPaddle : MonoBehaviour
 { 
-    [SerializeField]
-    private NetworkManager networkManager;
     public PongPlayer Player = PongPlayer.PlayerLeft;
     public float Speed = 1;
     public float MinY = -4;
     public float MaxY = 4;
+
+    public bool isLocalPlayer = false; // Cette variable détermine si ce paddle est contrôlé par le joueur local
 
     PongInput inputActions;
     InputAction PlayerAction;
 
     void Start()
     {
-        // Find the NetworkManager (if needed for other functionalities)
-        networkManager = FindObjectOfType<NetworkManager>();
         inputActions = new PongInput();
 
-        switch (Player)
+        // Détermine l'action en fonction du rôle du joueur local (Player1 ou Player2)
+        if (Globals.Player == "Player1" && gameObject.name == "PaddleLeft")
         {
-            case PongPlayer.PlayerLeft:
-                PlayerAction = inputActions.Pong.Player1;
-                break;
-            case PongPlayer.PlayerRight:
-                PlayerAction = inputActions.Pong.Player2;
-                break;
+            isLocalPlayer = true; // Le joueur local contrôle LeftPaddle
+            PlayerAction = inputActions.Pong.Player1;
+        }
+        else if (Globals.Player == "Player2" && gameObject.name == "PaddleRight")
+        {
+            isLocalPlayer = true; // Le joueur local contrôle RightPaddle
+            PlayerAction = inputActions.Pong.Player2;
+        }
+        else
+        {
+            isLocalPlayer = false; // Ce paddle n'est pas contrôlé par le joueur local
         }
 
-        PlayerAction.Enable();
-
-    // Connexion ou démarrage d'une partie via NetworkManager
-    if (networkManager != null)
-    {
-        networkManager.ConnectToHost("100.72.128.85"); // Remplacez par l'IP du serveur si nécessaire
-        //networkManager.SendMessageToServer("Player Right connected.");
-    
-    }
-    else
-    {
-        Debug.LogError("NetworkManager n'est pas assigné dans PongPaddle !");
-    }
+        PlayerAction?.Enable(); // N'active les actions que pour le joueur local
     }
 
     void Update()
     {
+        // Si ce n'est pas le joueur local, ne pas exécuter de contrôle
+        if (!isLocalPlayer) return;
+
+        // Lire la direction d'entrée et déplacer le paddle
         float direction = PlayerAction.ReadValue<float>();
         Move(direction);    
     }
 
     void Move(float direction)
     {
+        // Déplace le paddle verticalement dans les limites définies
         Vector3 newPos = transform.position + (Vector3.up * Speed * direction * Time.deltaTime);
         newPos.y = Mathf.Clamp(newPos.y, MinY, MaxY);
         transform.position = newPos;
-
-        // Envoi de la position actuelle du paddle
-        //if (networkManager != null)
-        //{
-        //    networkManager.SendPaddlePosition(transform.position.y);
-        //}
-
-        }
+    }
 
     void OnDisable()
     {
-    if (PlayerAction != null)
-        PlayerAction.Disable();
-}
-
-    private void OnServerMessageReceived(string message)
-    {
-    Debug.Log("Message reçu du serveur : " + message);
-
-        // Example: start an action based on the received message
-        if (message == "StartGame")
-        {
-            Debug.Log("The game is starting!");
-        }
+        // Désactive les actions quand le paddle est désactivé
+        if (PlayerAction != null)
+            PlayerAction.Disable();
     }
+
+    
 }

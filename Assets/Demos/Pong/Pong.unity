@@ -834,54 +834,6 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 1
---- !u!1 &425851377
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 425851379}
-  - component: {fileID: 425851378}
-  m_Layer: 0
-  m_Name: NetworkUI
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &425851378
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 425851377}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3dfa634b6e4a59e44b7f3fed702bdd1e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  networkManager: {fileID: 1652468497}
-  ipInput: {fileID: 942272723}
-  hostButton: {fileID: 371610003}
-  connectButton: {fileID: 371610003}
---- !u!4 &425851379
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 425851377}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &454829198
 GameObject:
   m_ObjectHideFlags: 0
@@ -912,7 +864,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 965302441}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -1463,6 +1415,7 @@ GameObject:
   - component: {fileID: 807978584}
   - component: {fileID: 807978588}
   - component: {fileID: 807978589}
+  - component: {fileID: 807978590}
   m_Layer: 0
   m_Name: PaddleRight
   m_TagString: Untagged
@@ -1571,11 +1524,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bacdeada40f4241b4a9e9fe25b22b34e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  networkManager: {fileID: 1652468497}
   Player: 2
   Speed: 5
   MinY: -4
   MaxY: 4
+  isLocalPlayer: 0
 --- !u!54 &807978589
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1603,6 +1556,23 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &807978590
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 807978583}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7861d52e3259f44c8dc241bfb9c1616, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 5
+  minY: -4
+  maxY: 4
+  isLocalPlayer: 0
+  playerRole: Player2
 --- !u!1 &814606652
 GameObject:
   m_ObjectHideFlags: 0
@@ -1617,6 +1587,7 @@ GameObject:
   - component: {fileID: 814606653}
   - component: {fileID: 814606657}
   - component: {fileID: 814606658}
+  - component: {fileID: 814606659}
   m_Layer: 0
   m_Name: PaddleLeft
   m_TagString: Untagged
@@ -1725,11 +1696,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bacdeada40f4241b4a9e9fe25b22b34e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  networkManager: {fileID: 0}
   Player: 1
   Speed: 5
   MinY: -4
   MaxY: 4
+  isLocalPlayer: 0
 --- !u!54 &814606658
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1757,6 +1728,23 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &814606659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 814606652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7861d52e3259f44c8dc241bfb9c1616, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 5
+  minY: -4
+  maxY: 4
+  isLocalPlayer: 0
+  playerRole: Player1
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -1959,8 +1947,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UDP: {fileID: 1950999898}
-  ServerIP: 127.0.0.1
+  ServerIP: 192.168.213.254
   ServerPort: 25000
+  ipInputField: {fileID: 0}
 --- !u!1 &1396659331
 GameObject:
   m_ObjectHideFlags: 0
@@ -2039,6 +2028,55 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1396659331}
   m_CullTransparentMesh: 1
+--- !u!1 &1648087386
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1648087388}
+  - component: {fileID: 1648087387}
+  m_Layer: 0
+  m_Name: PaddleController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1648087387
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1648087386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7861d52e3259f44c8dc241bfb9c1616, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 5
+  minY: -4
+  maxY: 4
+  isLocalPlayer: 0
+  playerRole: Player1
+--- !u!4 &1648087388
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1648087386}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 633.8312, y: 118.619446, z: -37.30724}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1903440898
 GameObject:
   m_ObjectHideFlags: 0
@@ -2134,11 +2172,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1999715757}
-  - {fileID: 1114344209}
-  - {fileID: 942272720}
-  - {fileID: 995577561}
-  - {fileID: 949575818}
-  - {fileID: 1381914299}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2242,7 +2275,6 @@ MonoBehaviour:
   Panel: {fileID: 1396659331}
   PlayerLeft: {fileID: 2130213939}
   PlayerRight: {fileID: 788302282}
-  networkManager: {fileID: 0}
 --- !u!1 &2030656710
 GameObject:
   m_ObjectHideFlags: 0
@@ -2572,3 +2604,5 @@ SceneRoots:
   - {fileID: 1903440902}
   - {fileID: 551751738}
   - {fileID: 52298220}
+  - {fileID: 454829199}
+  - {fileID: 1648087388}

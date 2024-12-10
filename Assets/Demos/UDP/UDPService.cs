@@ -49,7 +49,7 @@ public class UDPService : MonoBehaviour
         try
         {
             udp = new UdpClient();
-            localEP = new IPEndPoint(IPAddress.Any, 0);
+            localEP = new IPEndPoint(IPAddress.Any, 25000);
             udp.Client.Bind(localEP);
         } catch (System.Exception ex)
         {

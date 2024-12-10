@@ -35,6 +35,7 @@ public class PongBall : MonoBehaviour
       );
       Direction.x *= Mathf.Sign(Random.Range(-100, 100));
       Direction.Normalize();
+      Debug.Log("PongBall Start");
     }
 
     void OnCollisionEnter(Collision c) {

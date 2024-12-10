@@ -6,7 +6,6 @@ public class PongWinUI : MonoBehaviour
     public GameObject Panel;
     public GameObject PlayerLeft;
     public GameObject PlayerRight;
-    public NetworkManager networkManager;
 
     private PongBall Ball;
     private float searchInterval = 0.5f;
@@ -14,8 +13,6 @@ public class PongWinUI : MonoBehaviour
 
     void Start()
     {
-        if (networkManager == null)
-            networkManager = FindObjectOfType<NetworkManager>();
 
         // Make sure UI elements start hidden
         if (Panel != null) Panel.SetActive(false);

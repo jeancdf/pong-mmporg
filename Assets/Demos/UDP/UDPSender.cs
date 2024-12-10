@@ -5,7 +5,7 @@ using System.Net.Sockets;
 public class UDPSender : MonoBehaviour
 {
     public int DestinationPort = 25000;
-    public string DestinationIP = "192.168.226.88";
+    public string DestinationIP = Globals.IPAddress;
 
     public UDPReceiver.UDPMessageReceive OnMessageReceived;
 

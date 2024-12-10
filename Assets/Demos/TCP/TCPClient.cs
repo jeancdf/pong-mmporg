@@ -8,7 +8,7 @@ using System;
 public class TCPClient : MonoBehaviour
 {
     public int DestinationPort = 25000;
-    public string DestinationIP ="100.72.128.85";
+    public string DestinationIP = Globals.IPAddress;
 
     TcpClient tcp;
     IPEndPoint localEP;
