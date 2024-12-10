@@ -11,6 +11,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Demos/Pong/Pong.unity
     guid: 6b02379440f3144cf80dd236e2a2e9cf
+  - enabled: 0
+    path: Assets/Demos/UDP/UDP.unity
+    guid: 1698941a3d3354c26b78c8dbdb0c2d89
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
