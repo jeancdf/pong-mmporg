@@ -28,6 +28,10 @@ public class PaddleSyncClient : MonoBehaviour
 
     private void OnMessageReceived(string message, IPEndPoint sender)
     {
+
+        // Deporter toutes cette partie vers le ClientManager sauf l'assignation de la position, ce param sera donnée à la methode newPosition
+        //             newPosition.y = y;
+            //transform.position = newPosition;
         if (!message.StartsWith("UPDATE|PADDLE|")) return;
 
         try

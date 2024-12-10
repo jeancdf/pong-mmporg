@@ -49,7 +49,7 @@ public class UDPService : MonoBehaviour
         try
         {
             udp = new UdpClient();
-            localEP = new IPEndPoint(IPAddress.Any, 25000);
+            localEP = new IPEndPoint(IPAddress.Any, 0);
             udp.Client.Bind(localEP);
         } catch (System.Exception ex)
         {
@@ -76,11 +76,13 @@ public class UDPService : MonoBehaviour
 
         while (udp.Available > 0)
         {
+             Debug.Log("AVAILABLE");
             IPEndPoint sourceEP = new IPEndPoint(IPAddress.Any, 0);
             byte[] data = udp.Receive(ref sourceEP);
 
             try
             {
+                Debug.Log("DATA RECEIVED");
                 ParseString(data, sourceEP);
             }
             catch (System.Exception ex)

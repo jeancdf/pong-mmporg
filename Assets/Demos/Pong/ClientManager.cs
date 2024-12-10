@@ -5,10 +5,7 @@ using TMPro;
 public class ClientManager : MonoBehaviour
 {
     public UDPService UDP;
-    public string ServerIP = Globals.IPAddress;
-
-    public TMP_InputField ipInputField;
-
+    public string ServerIP = "127.0.0.1";
     public int ServerPort = 25000;
 
     public IPEndPoint ServerEndpoint;
@@ -36,6 +33,7 @@ public class ClientManager : MonoBehaviour
 
         UDP.OnMessageReceived += (string message, IPEndPoint sender) =>
         {
+            Debug.Log($"Message : {message}");
             if (message.StartsWith("ASSIGN|PADDLE|"))
             {
                 HandlePaddleAssignment(message);
@@ -51,6 +49,7 @@ public class ClientManager : MonoBehaviour
 
     private void SendConnectMessage()
     {
+        Debug.Log("Sending CONNECT message to server: " + ServerEndpoint.ToString());
         UDP.SendUDPMessage("CONNECT", ServerEndpoint);
     }
 
