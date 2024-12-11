@@ -22,7 +22,6 @@ public class BallSyncServer : MonoBehaviour
         {
             Vector3 position = transform.position;
 
-            // Construire le message avec des points comme séparateurs décimaux
             string data = string.Format(System.Globalization.CultureInfo.InvariantCulture,
                 "X:{0},Y:{1},Z:{2}",
                 position.x, position.y, position.z);
@@ -30,7 +29,7 @@ public class BallSyncServer : MonoBehaviour
 
             ServerMan.BroadcastUDPMessage(message);
 
-            NextUpdateTimeout = Time.time + 0.03f;
+            NextUpdateTimeout = Time.time + 0.01f;
         }
     }
 }

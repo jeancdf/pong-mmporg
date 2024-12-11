@@ -11,7 +11,8 @@ public class PaddleSyncServer : MonoBehaviour
     private float paddlePositionY;
 
     float NextUpdateTimeout = -1;
-
+    
+    private IPEndPoint lastMessageSender;
 
     void Awake()
     {
@@ -34,8 +35,7 @@ public class PaddleSyncServer : MonoBehaviour
         if (Time.time > NextUpdateTimeout)
         {
             string message = $"UPDATE|PADDLE|{paddleSide}|Y:{currentPositionY.ToString(System.Globalization.CultureInfo.InvariantCulture)}";
-            serverManager.BroadcastUDPMessage(message);
-            
+            serverManager.BroadcastUDPMessage(message, lastMessageSender);            
             NextUpdateTimeout = Time.time + 0.03f;
         }
     }
@@ -43,6 +43,8 @@ public class PaddleSyncServer : MonoBehaviour
     private void OnMessageReceived(string message, IPEndPoint sender)
     {
         if (!message.StartsWith("UPDATE|PADDLE|")) return;
+
+        lastMessageSender = sender;
 
         string[] tokens = message.Split('|');
         if (tokens.Length < 4 || !Enum.TryParse(tokens[2], out PaddleSide receivedSide)) return;
