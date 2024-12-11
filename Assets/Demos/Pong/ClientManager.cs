@@ -57,6 +57,10 @@ public class ClientManager : MonoBehaviour
         {
             HandlePaddleUpdate(message);
         }
+        else if (message.StartsWith("UPDATE|GAMESTART"))
+        {
+            Globals.IsGameStarted=true;
+        }
     }
 
     private void HandlePaddleAssignment(string message)
