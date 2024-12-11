@@ -5,7 +5,7 @@ public class MenuUI : MonoBehaviour
 {
     public TMPro.TMP_InputField InpIP;
     
-    public void setIpAddress() {
+    public void SetIpAddress() {
         Globals.IPAddress = InpIP.text;
     }
     public void SetRole(bool isServer) {
@@ -13,6 +13,7 @@ public class MenuUI : MonoBehaviour
     }
 
     public void StartGame() {
+        Debug.Log("Starting Game");
         if (Globals.IsServer) {
             SceneManager.LoadScene("Pong");
         }
