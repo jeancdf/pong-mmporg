@@ -56,12 +56,17 @@ public class ServerManager : MonoBehaviour
 
     private string AssignPaddleToClient(IPEndPoint clientEndPoint)
     {
-        string assignedPaddle = "PaddleLeft";
-        if (clientPaddleAssignments.ContainsValue("PaddleLeft"))
+        int leftCount = 0;
+        int rightCount = 0;
+
+        foreach (var assignment in clientPaddleAssignments.Values)
         {
-            assignedPaddle = "PaddleRight";
+            if (assignment == "PaddleLeft") leftCount++;
+            else if (assignment == "PaddleRight") rightCount++;
         }
-        
+
+        string assignedPaddle = leftCount <= rightCount ? "PaddleLeft" : "PaddleRight";
+
         clientPaddleAssignments[clientEndPoint] = assignedPaddle;
         return assignedPaddle;
     }
@@ -83,25 +88,20 @@ public class ServerManager : MonoBehaviour
     
     private void HandlePaddleUpdate(string message, IPEndPoint sender)
     {
-
-            // Découper le message pour extraire les données
             string[] tokens = message.Split('|');
             if (tokens.Length < 4) return;
 
-            string paddleSide = tokens[2]; // LEFT ou RIGHT
-            string positionData = tokens[3]; // Y:<position>
+            string paddleSide = tokens[2];
+            string positionData = tokens[3];
 
-            // Extraire la position Y
             if (!positionData.StartsWith("Y:")) return;
             float newPositionY = float.Parse(positionData.Substring(2), System.Globalization.CultureInfo.InvariantCulture);
 
-            // Trouver le paddle correspondant
             foreach (KeyValuePair<IPEndPoint, string> assignment in clientPaddleAssignments)
             {
                 if (assignment.Key.Equals(sender) && assignment.Value == paddleSide)
                 {
-                    // Appliquer la nouvelle position au paddle
-                    GameObject paddle = GameObject.Find(paddleSide); // Assurez-vous que les paddles ont des noms correspondants
+                    GameObject paddle = GameObject.Find(paddleSide);
                     if (paddle != null)
                     {
                         Vector3 currentPosition = paddle.transform.position;
