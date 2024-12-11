@@ -30,6 +30,10 @@ public class BallSyncServer : MonoBehaviour
             ServerMan.BroadcastUDPMessage(message);
 
             NextUpdateTimeout = Time.time + 0.01f;
+
+            string messageScore = $"UPDATE|SCORE|{Globals.P1Score}|{Globals.P2Score}";
+
+            ServerMan.BroadcastUDPMessage(messageScore);
         }
     }
 }
