@@ -8,4 +8,7 @@ public class Globals: MonoBehaviour
     // Ajout des scores
     public static int P1Score = 0; // Score du joueur 1
     public static int P2Score = 0; // Score du joueur 2
+
+    public static bool IsGameStarted = false;
+
 }

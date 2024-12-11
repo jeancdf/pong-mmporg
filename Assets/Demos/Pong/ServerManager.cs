@@ -52,6 +52,17 @@ public class ServerManager : MonoBehaviour
             SendPaddleAssignment(sender, assignedPaddle);
         }
         Debug.Log("There are " + clients.Count + " clients present.");
+        if(clients.Count >= 2){
+            Globals.IsGameStarted=true;
+            string message = "UPDATE|GAMESTART";
+            foreach (var client in clients)
+            {
+                IPEndPoint clientEndPoint = client.Value; // Valeur (l'adresse IP et le port du client)
+
+                UDP.SendUDPMessage(message,clientEndPoint);
+                //Debug.Log($"Client ID: {clientId}, Address: {clientEndPoint.Address}, Port: {clientEndPoint.Port}");
+            }
+        }
     }
 
     private string AssignPaddleToClient(IPEndPoint clientEndPoint)

@@ -66,14 +66,16 @@ public class PongBall : MonoBehaviour
                 break;
 
             case "BoundLeft":
-                //Direction.x = -Direction.x;
-                Globals.P2Score++;
-                _State = PongBallState.PlayerRightWin;
+                Direction.x = -Direction.x;
+                if(Globals.IsGameStarted==true)    
+                    Globals.P2Score++;
+                //_State = PongBallState.PlayerRightWin;
                 break;
             case "BoundRight":
-                //Direction.x = -Direction.x;
-                Globals.P1Score++;
-                _State = PongBallState.PlayerLeftWin;
+                Direction.x = -Direction.x;
+                if(Globals.IsGameStarted==true)
+                    Globals.P1Score++;
+                //_State = PongBallState.PlayerLeftWin;
                 break;
                 
             
