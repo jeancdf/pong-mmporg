@@ -51,22 +51,32 @@ public class PongBall : MonoBehaviour
                 Direction.y = -Direction.y;
                 break;
 
+            /*   
             case "PaddleLeft":
             case "PaddleRight":
             case "BoundLeft":
             case "BoundRight":
                 Direction.x = -Direction.x;
                 break;
-
-            /*
-            case "BoundLeft":
-              _State = PongBallState.PlayerRightWin;
-              break;
-
-            case "BoundRight":
-              _State = PongBallState.PlayerLeftWin;
-              break;
             */
+            
+            case "PaddleLeft":
+            case "PaddleRight":
+                Direction.x = -Direction.x;
+                break;
+
+            case "BoundLeft":
+                //Direction.x = -Direction.x;
+                Globals.P2Score++;
+                _State = PongBallState.PlayerRightWin;
+                break;
+            case "BoundRight":
+                //Direction.x = -Direction.x;
+                Globals.P1Score++;
+                _State = PongBallState.PlayerLeftWin;
+                break;
+                
+            
 
         }
     }
