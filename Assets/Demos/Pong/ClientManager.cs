@@ -1,13 +1,14 @@
+using System;
 using System.Net;
 using UnityEngine;
-using TMPro;
+using System.Globalization;
 
 public class ClientManager : MonoBehaviour
 {
     public UDPService UDP;
-    public string ServerIP = "127.0.0.1";
+    public string ServerIP;
+    
     public int ServerPort = 25000;
-
     public IPEndPoint ServerEndpoint;
 
     private string assignedPaddle = "";
@@ -15,8 +16,12 @@ public class ClientManager : MonoBehaviour
     public PongPaddle paddleLeftPlayer;
     public PongPaddle paddleRightPlayer;
 
+    public event Action<PaddleSyncClient.PaddleSide, float> OnPaddlePositionUpdated;
+
     void Awake()
     {
+        ServerIP = Globals.IPAddress;
+        
         if (Globals.IsServer)
         {
             gameObject.SetActive(false);
@@ -31,26 +36,27 @@ public class ClientManager : MonoBehaviour
     
         SendConnectMessage();
 
-        UDP.OnMessageReceived += (string message, IPEndPoint sender) =>
-        {
-            Debug.Log($"Message : {message}");
-            if (message.StartsWith("ASSIGN|PADDLE|"))
-            {
-                HandlePaddleAssignment(message);
-            }
-            else if (message.StartsWith("UPDATE|PADDLE|"))
-            {
-                Debug.Log("[CLIENT] Message received from " +
-                          sender.Address.ToString() + ":" + sender.Port
-                          + " => " + message);
-            }
-        };
+        UDP.OnMessageReceived += HandleMessage;
     }
 
     private void SendConnectMessage()
     {
         Debug.Log("Sending CONNECT message to server: " + ServerEndpoint.ToString());
         UDP.SendUDPMessage("CONNECT", ServerEndpoint);
+    }
+
+    private void HandleMessage(string message, IPEndPoint sender)
+    {
+        Debug.Log($"Message : {message}");
+
+        if (message.StartsWith("ASSIGN|PADDLE|"))
+        {
+            HandlePaddleAssignment(message);
+        }
+        else if (message.StartsWith("UPDATE|PADDLE|"))
+        {
+            HandlePaddleUpdate(message);
+        }
     }
 
     private void HandlePaddleAssignment(string message)
@@ -75,7 +81,46 @@ public class ClientManager : MonoBehaviour
         }
     }
 
-    void Update()
+    private void HandlePaddleUpdate(string message)
     {
+        try
+        {
+            string[] tokens = message.Split('|');
+            if (tokens.Length < 4)
+            {
+                Debug.LogWarning("Message mal formé : parties insuffisantes.");
+                return;
+            }
+
+            string receivedPaddleSide = tokens[2];
+            if (!Enum.TryParse(receivedPaddleSide, out PaddleSyncClient.PaddleSide paddleSide))
+            {
+                Debug.LogWarning("PaddleSide invalide.");
+                return;
+            }
+
+            string data = tokens[3];
+            string[] positionData = data.Split(':');
+
+            if (positionData.Length != 2 || positionData[0] != "Y")
+            {
+                Debug.LogWarning($"Données de position mal formées : {data}");
+                return;
+            }
+
+            float y = float.Parse(positionData[1], CultureInfo.InvariantCulture);
+            OnPaddlePositionUpdated?.Invoke(paddleSide, y);
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogWarning($"Erreur lors du parsing des données de position : {ex.Message}");
+        }
+    }
+
+    public void SendPaddleUpdate(PaddleSyncClient.PaddleSide paddleSide, float positionY)
+    {
+        string message = $"UPDATE|PADDLE|{paddleSide}|Y:{positionY.ToString(CultureInfo.InvariantCulture)}";
+        UDP.SendUDPMessage(message, ServerEndpoint);
+        Debug.Log($"Message envoyé par le client {ServerEndpoint.Address}:{ServerEndpoint.Port} => {message}");
     }
 }
