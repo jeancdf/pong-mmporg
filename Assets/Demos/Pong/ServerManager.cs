@@ -60,7 +60,6 @@ public class ServerManager : MonoBehaviour
                 IPEndPoint clientEndPoint = client.Value; // Valeur (l'adresse IP et le port du client)
 
                 UDP.SendUDPMessage(message,clientEndPoint);
-                //Debug.Log($"Client ID: {clientId}, Address: {clientEndPoint.Address}, Port: {clientEndPoint.Port}");
             }
         }
     }

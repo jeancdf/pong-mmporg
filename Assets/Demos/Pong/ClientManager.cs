@@ -61,6 +61,10 @@ public class ClientManager : MonoBehaviour
         {
             Globals.IsGameStarted=true;
         }
+        else if (message.StartsWith("UPDATE|SCORE"))
+        {
+            HandleScoreUpdate(message);
+        }
     }
 
     private void HandlePaddleAssignment(string message)
@@ -119,6 +123,12 @@ public class ClientManager : MonoBehaviour
         {
             Debug.LogWarning($"Erreur lors du parsing des données de position : {ex.Message}");
         }
+    }
+
+    private void HandleScoreUpdate(string message){
+        string[] tokens = message.Split('|');
+        Globals.P1Score = int.Parse(tokens[2]);
+        Globals.P2Score = int.Parse(tokens[3]);
     }
 
     public void SendPaddleUpdate(PaddleSyncClient.PaddleSide paddleSide, float positionY)

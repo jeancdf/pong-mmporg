@@ -9,7 +9,10 @@ public class ScoreDisplay : MonoBehaviour
     void Update()
     {
         // Met à jour les champs de texte avec les scores actuels
+        Debug.Log("Globals.P1Score");
         P1ScoreText.text = Globals.P1Score.ToString();
         P2ScoreText.text = Globals.P2Score.ToString();
+        Debug.Log("P1ScoreText.text :" + P1ScoreText.text);
+        Debug.Log("P2ScoreText.text :" + P2ScoreText.text);
     }
 }
