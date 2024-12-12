@@ -1,6 +1,7 @@
 using UnityEngine;
 
-public enum PongBallState {
+public enum PongBallState
+{
     Playing = 0,
     PlayerLeftWin = 1,
     PlayerRightWin = 2,
@@ -13,20 +14,25 @@ public class PongBall : MonoBehaviour
     Vector3 Direction;
     PongBallState _State = PongBallState.Playing;
 
-    public PongBallState State {
-        get {
+    public PongBallState State
+    {
+        get
+        {
             return _State;
         }
-    } 
+    }
 
-    void Awake() {
-        if (!Globals.IsServer) {
+    void Awake()
+    {
+        if (!Globals.IsServer)
+        {
             enabled = false;
         }
 
     }
 
-    void Start() {
+    void Start()
+    {
         Direction = new Vector3(
             Random.Range(0.5f, 1),
             Random.Range(-0.5f, 0.5f),
@@ -36,16 +42,20 @@ public class PongBall : MonoBehaviour
         Direction.Normalize();
     }
 
-    void Update() {
-        if (State != PongBallState.Playing) {
+    void Update()
+    {
+        if (State != PongBallState.Playing)
+        {
             return;
         }
 
         transform.position = transform.position + (Direction * Speed * Time.deltaTime);
     }
 
-    void OnCollisionEnter(Collision c) {
-        switch (c.collider.name) {
+    void OnCollisionEnter(Collision c)
+    {
+        switch (c.collider.name)
+        {
             case "BoundTop":
             case "BoundBottom":
                 Direction.y = -Direction.y;
@@ -59,7 +69,7 @@ public class PongBall : MonoBehaviour
                 Direction.x = -Direction.x;
                 break;
             */
-            
+
             case "PaddleLeft":
             case "PaddleRight":
                 Direction.x = -Direction.x;
@@ -67,22 +77,22 @@ public class PongBall : MonoBehaviour
 
             case "BoundLeft":
                 Direction.x = -Direction.x;
-                if(Globals.IsServer==true)
-                    if(Globals.IsGameStarted == true)    
+                if (Globals.IsServer == true)
+                    if (Globals.IsGameStarted == true)
                         Globals.P2Score++;
-                        //Debug.Log("P2Score : "+ Globals.P2Score);
+                //Debug.Log("P2Score : "+ Globals.P2Score);
                 //_State = PongBallState.PlayerRightWin;
                 break;
             case "BoundRight":
                 Direction.x = -Direction.x;
-                if(Globals.IsServer==true)
-                    if(Globals.IsGameStarted == true)
+                if (Globals.IsServer == true)
+                    if (Globals.IsGameStarted == true)
                         Globals.P1Score++;
-                        //Debug.Log("P1Score : "+ Globals.P1Score);
+                //Debug.Log("P1Score : "+ Globals.P1Score);
                 //_State = PongBallState.PlayerLeftWin;
                 break;
-                
-            
+
+
 
         }
     }
